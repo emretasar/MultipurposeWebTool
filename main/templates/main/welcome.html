@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <title>Current Time and Date</title>
+</head>
+<body>
+    
+    <h1>Welcome</h1>
+    <div class="container">
+        <h1>Current Time and Date</h1>
+        <p id="datetime">Loading...</p>
+    </div>
+
+    <a href="{% url 'login_page' %}" class="btn btn-info btn-lg ms-1 rounded border-primary">Login</a>
+    <a href="{% url 'register_page' %}" class="btn btn-info btn-lg ms-1 rounded border-primary">Register</a>
+
+    <script>
+        function updateDateTime() {
+            const dateTimeElement = document.getElementById("datetime");
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
+            const dateTimeString = now.toLocaleDateString('en-US', options);
+            dateTimeElement.textContent = dateTimeString;
+        }
+
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 100px auto;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #2dd0fd;
+        }
+
+        #datetime {
+            font-size: 24px;
+            color: #2dd0fd;
+        }
+    </style>
+</body>
+</html>
