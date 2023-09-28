@@ -1,11 +1,11 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
-from register import views as register_views
+
 
 urlpatterns = [
     path('', views.welcome, name=''),
+    path('', include('register.urls')),
+    path('todos/', include('todo.urls')),
     path('home/', views.home, name='home_page'),
-    path('login/', register_views.login, name='login_page'),
-    path('register/', register_views.register, name='register_page'),
     path('welcome/', views.welcome, name='welcome'),
 ]
