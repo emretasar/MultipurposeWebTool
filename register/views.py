@@ -1,22 +1,22 @@
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.http import HttpResponseForbidden
 
-def register(response):
-    if response.method == "POST":
-        form = RegisterForm(response.POST)
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect("/home")
     else:
         form = RegisterForm()
-        return render(response, "register/register.html", {"form":form})
+        return render(request, "register/register.html", {"form":form})
     
 
-def login(response):
-    if response.method == "POST":
-        form = LoginForm(response.POST)
+def log_in(request):
+    if request.method == "POST":
+        form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
@@ -24,7 +24,8 @@ def login(response):
             if user is None:
                 return HttpResponseForbidden()
             else:
+                login(request, user)
                 return redirect("/home")
     else:    
-        form = LoginForm(response.POST)
-        return render(response, "registration/login.html", {"form":form})
+        form = LoginForm(request.POST)
+        return render(request, "registration/login.html", {"form":form})

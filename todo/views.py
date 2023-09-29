@@ -1,22 +1,25 @@
 from django.shortcuts import render, redirect
-from django.shortcuts import render
+from datetime import date
 from .models import Task
 from .forms import TaskForm
 
 def todos(request):
-    user = request.user
-    print(user.username)
-    tasks = Task.objects.all()
-    if request.method == "POST":
-        form = TaskForm(request.POST)
-        if form.is_valid():
-            form.save()
-            context = {'tasks':tasks, 'form':form}
-            return render(request, 'todo/list.html', context)
-    else:
-        form = TaskForm()
-        context = {'tasks':tasks, 'form':form}
-        return render(request, 'todo/list.html', context)
+	today = date.today()
+	user = request.user
+	tasks = Task.objects.all()
+	if request.method == "POST":
+		form = TaskForm(request.POST)	
+		if form.is_valid():
+			form.save()
+			latest_created_task = tasks.latest("created")
+			latest_created_task.owner = user.username
+			latest_created_task.save()
+			context = {'tasks':tasks, 'form':form, 'user':user.username, 'today':today}
+			return render(request, 'todo/list.html', context)
+	else:
+		form = TaskForm()
+		context = {'tasks':tasks, 'form':form, 'user':user.username, 'today':today}
+		return render(request, 'todo/list.html', context)
 
 
 def updateTask(request, pk):
@@ -36,10 +39,5 @@ def updateTask(request, pk):
 
 def deleteTask(request, pk):
 	item = Task.objects.get(id=pk)
-
-	if request.method == 'POST':
-		item.delete()
-		return redirect('/todos')
-
-	context = {'item':item}
-	return render(request, 'todo/delete.html', context)
+	item.delete()
+	return redirect('/todos')
