@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap4',
     'todo.apps.TodoConfig',
+    'notes.apps.NotesConfig',
 ]
 
 MIDDLEWARE = [

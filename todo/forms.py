@@ -5,8 +5,8 @@ from .models import Task
 
 class TaskForm(ModelForm):
     complete = forms.BooleanField(required=False, widget=forms.CheckboxInput())
-    deadline = forms.DateField(required=False, widget=forms.DateInput())
-
+    deadline = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}))
+    
     class Meta:
         model = Task
         fields = ["title", "description", "complete", "deadline"]
