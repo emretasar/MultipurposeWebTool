@@ -1,0 +1,21 @@
+.navbar {
+  border: 2px solid #1e77c9;
+  border-radius: 5px 5px;
+}
+
+.completed-task {
+  text-decoration: line-through;
+} 
+
+#showFormButton {
+  margin: auto;
+  display: block;
+}
+
+.row, .col-6 {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+
+  

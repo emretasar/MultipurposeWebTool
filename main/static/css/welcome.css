@@ -1,0 +1,23 @@
+.welcome {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0 auto; 
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 100px auto;
+    max-width: 600px;
+}
+
+h1 {
+    color: #2dd0fd;
+}
+
+#datetime {
+    font-size: 24px;
+    color: #2dd0fd;
+}
