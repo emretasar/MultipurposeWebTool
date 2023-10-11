@@ -1,0 +1,65 @@
+{% extends "main/home.html" %}
+
+{% block title %} Weather {% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+{% block content %}
+
+    <h5>Weather Page</h5>
+
+    <div class="list-container">
+        <div class="row">
+            {% for weather in weathers %}
+                <div class="col-4 d-flex align-items-stretch">
+                    <div class="card text-center" style="width: 24rem;">
+                        <div class="card-body">
+                            <img class="card-img-top" src="{% if weather.con == 'Clouds' %}{% static 'clouds.svg' %}{% elif weather.con == 'Rainy' %}{% static 'rainy.svg' %}{% elif weather.con == 'Clear' %}{% static 'sunny.svg' %}{% elif weather.con == 'Snowy' %}{% static 'snow.svg' %}{% endif %}">
+                            <h5 class="card-title">{{ weather.loc }}</h5>
+                            <h6 class="card-subtitle">{{weather.con}}</h6>
+                            <p class="card-text">{{weather.info|linebreaks}}</p>
+                            <a class="btn btn-sm btn-danger" href="{% url 'delete' weather.loc.id %}">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}  
+        </div>
+        
+        <button type="button" id="showFormButton" class="btn btn-success">Add New Location</button>
+
+        <form method="POST" class="form-group" id="taskForm" style="display: none;">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-success">Create Location</button>
+        </form>
+    </div>
+
+    <style>
+        #showFormButton {
+            margin: auto;
+            display: block;
+        }
+
+        .row {
+            margin-top: 25px;
+            margin-bottom: 25px;
+        }
+    </style>
+
+    <script>
+        const showFormButton = document.getElementById("showFormButton");
+        const taskForm = document.getElementById("taskForm");
+
+        showFormButton.addEventListener("click", function () {
+            if (taskForm.style.display === "none" || taskForm.style.display === "") {
+                taskForm.style.display = "block";
+                noteForm.scrollIntoView({ behavior: "smooth" });
+            } else {
+                taskForm.style.display = "none";
+            }
+        });
+    </script>
+
+{% endblock %}

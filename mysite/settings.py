@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'todo.apps.TodoConfig',
     'notes.apps.NotesConfig',
+    'weather.apps.WeatherConfig',
 ]
 
 MIDDLEWARE = [

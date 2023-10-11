@@ -47,7 +47,11 @@ atlassian-ide-plugin.xml
 
 # Python # 
 *.py[cod] 
+local_settings.py
 *$py.class 
+
+# Static Folders # 
+*/static
 
 # Distribution / packaging 
 .Python build/ 
