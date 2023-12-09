@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 import requests
-from .local_settings import WHEATHER_API_KEY, WHEATHER_API_URL
 from .models import Location
 from .forms import LocationForm
 from .utils import get_weather_info
