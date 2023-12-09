@@ -17,7 +17,7 @@
                                 <h6 class="card-subtitle {% if task.deadline == today %}text-danger{% endif %}">Deadline: {{task.deadline}}</h6>
                                 <p class="card-text">{{task.description}}</p>
                                 <a class="btn btn-sm btn-info" href="{% url 'update_task' task.id %}">Update</a>
-                                <a class="btn btn-sm btn-danger" href="{% url 'delete' task.id %}">Delete</a>
+                                <a class="btn btn-sm btn-danger" href="{% url 'delete_task' task.id %}">Delete</a>
                             </div>
                         </div>
                     </div>
