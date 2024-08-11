@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'todo.apps.TodoConfig',
     'notes.apps.NotesConfig',
     'weather.apps.WeatherConfig',
+    'budget.apps.BudgetConfig',
 ]
 
 MIDDLEWARE = [
