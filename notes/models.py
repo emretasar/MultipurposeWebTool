@@ -3,7 +3,7 @@ from django.db import models
 
 class Note(models.Model):
 	title = models.CharField(max_length=100)
-	note = models.CharField(max_length=1000)
+	note = models.CharField(max_length=1600)
 	tag = models.CharField(max_length=20)
 	create_date = models.DateTimeField(auto_now_add=True)
 	last_edit_date = models.DateTimeField(auto_now_add=True)

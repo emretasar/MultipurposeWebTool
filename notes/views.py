@@ -9,9 +9,6 @@ def notes(request):
     notes = Note.objects.all()
     if request.method == "POST":
         form = NoteForm(request.POST)
-        temp = request.POST['tag']
-        print(temp)	
-        print(type(temp))	
         if form.is_valid():
             form.save()
             latest_created_note = notes.latest("create_date")
