@@ -12,6 +12,11 @@
   display: block;
 }
 
+#showFilterButton {
+  margin: auto;
+  display: block;
+}
+
 .row, .col-6 {
   margin-top: 25px;
   margin-bottom: 25px;

@@ -7,6 +7,14 @@
 {% block content %}
 
     <div class="list-container">
+        <button type="button" id="showFilterButton" class="btn btn-success">Filter</button>
+
+        <form method="POST" class="form-group" id="filterForm" style="display: none;">
+            {% csrf_token %}
+            {{ filterForm | crispy }}
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+
         <table class="table">
             <tr>
                 <th>Income/Outcome</th>
@@ -42,6 +50,18 @@
     </div>
 
     <script>
+        const showFilterButton = document.getElementById("showFilterButton");
+        const filterForm = document.getElementById("filterForm");
+
+        showFilterButton.addEventListener("click", function () {
+            if (filterForm.style.display === "none" || filterForm.style.display === "") {
+                filterForm.style.display = "block";
+                filterForm.scrollIntoView({ behavior: "smooth" });
+            } else {
+                filterForm.style.display = "none";
+            }
+        });
+
         const showFormButton = document.getElementById("showFormButton");
         const entryForm = document.getElementById("entryForm");
 

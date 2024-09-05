@@ -16,6 +16,7 @@
                                 <h5 class="card-title">{{ note.title }}</h5>
                                 <h6 class="card-subtitle">{{note.tag}}</h6>
                                 <p class="card-text">{{note.note|linebreaks}}</p>
+                                <p class="card-text">{{note.last_edit_date}}</p>
                                 <a class="btn btn-sm btn-info" href="{% url 'update_note' note.id %}">Update</a>
                                 <a class="btn btn-sm btn-danger" href="{% url 'delete_note' note.id %}">Delete</a>
                             </div>
