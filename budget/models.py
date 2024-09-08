@@ -24,7 +24,6 @@ class FilterFormModel(models.Model):
         ('Income', 'Income'),
         ('Outcome', 'Outcome'),
         ('Invest', 'Invest'),
-        ('Not Selected', 'Not Selected'),
     ]
 
     MONTH_CHOICES = [
@@ -32,18 +31,16 @@ class FilterFormModel(models.Model):
         ('April', 'April'), ('May', 'May'), ('June', 'June'),
         ('July', 'July'), ('August', 'August'), ('September', 'September'),
         ('October', 'October'), ('November', 'November'), ('December', 'December'),
-        ('Not Selected', 'Not Selected'),
     ]
 
     CATEGORY_CHOICES = [
         ('Yemek', 'Yemek'),
         ('Tasarruf', 'Tasarruf'),
         ('Fatura', 'Fatura'),
-        ('Not Selected', 'Not Selected'),
     ]
 
-    income_or_expense = models.CharField(max_length=12, choices=INCOME_OR_EXPENSE_CHOICES)
+    income_or_expense = models.CharField(max_length=12, choices=INCOME_OR_EXPENSE_CHOICES, blank=True)
 
-    month = models.CharField(max_length=12, choices=MONTH_CHOICES)
+    month = models.CharField(max_length=12, choices=MONTH_CHOICES, blank=True)
 
-    category = models.CharField(max_length=12, choices=CATEGORY_CHOICES)
+    category = models.CharField(max_length=12, choices=CATEGORY_CHOICES, blank=True)

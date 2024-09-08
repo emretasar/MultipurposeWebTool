@@ -16,11 +16,6 @@ class BudgetEntryForm(forms.ModelForm):
 
 
 class FilterForm(forms.ModelForm):
-    """
-    income_or_expense = forms.Select(choices=FilterFormModel.INCOME_OR_EXPENSE_CHOICES)
-    month = forms.Select(choices=FilterFormModel.MONTH_CHOICES)
-    category = forms.Select(choices=FilterFormModel.CATEGORY_CHOICES)
-    """
     class Meta:
         model = FilterFormModel
         fields = ['income_or_expense', 'month', 'category']
@@ -30,8 +25,12 @@ class FilterForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.layout = self.helper.layout = Row(
-            Column('income_or_expense', css_class='form-group col-md-4 mb-0'),
-            Column('month', css_class='form-group col-md-4 mb-0'),
-            Column('category', css_class='form-group col-md-4 mb-0'),
+            Column('income_or_expense', css_class='form-group col-md-4'),
+            Column('month', css_class='form-group col-md-4'),
+            Column('category', css_class='form-group col-md-4'),
         )
+        self.fields['income_or_expense'].required = False
+        self.fields['month'].required = False
+        self.fields['category'].required = False
+
         self.helper.add_input(Submit('submit', 'Submit'))
