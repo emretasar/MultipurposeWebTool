@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from datetime import date
 from .models import BudgetEntry, FilterFormModel
 from .forms import BudgetEntryForm, FilterForm
+import openpyxl
+
 
 def budget_entries(request):
     today = date.today()
@@ -48,6 +51,29 @@ def budget_entries(request):
         context = {'entries': entries, 'form': form, 'filterForm': filterForm, 'user': user.username, 'today': today}
         return render(request, 'budget/list.html', context)
 
+def export_to_excel(request):
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = 'Exported Data'
+
+    columns = ['Income/Expense', 'Amount', 'Date', 'Category', 'Description']
+    ws.append(columns)  # Append headers
+
+    currentMonth = date.today().month
+    entries = BudgetEntry.objects.all()
+    entries = entries.filter(date__month = currentMonth)
+
+    for entry in entries:
+        if (entry.inout == "Outcome" or entry.inout == "Invest"):
+            entry.amount *= -1
+        ws.append([entry.inout, entry.amount, entry.date, entry.category, entry.description])
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="exported_data.xlsx"'
+
+    wb.save(response)
+    
+    return response
 
 def update_entry(request, pk):
     entry = BudgetEntry.objects.get(id=pk)

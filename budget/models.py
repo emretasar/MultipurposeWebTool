@@ -37,6 +37,9 @@ class FilterFormModel(models.Model):
         ('Yemek', 'Yemek'),
         ('Tasarruf', 'Tasarruf'),
         ('Fatura', 'Fatura'),
+        ('Alışveriş', 'Alışveriş'),
+        ('Kira', 'Kira'),
+        ('Ulaşım', 'Ulaşım'),
     ]
 
     income_or_expense = models.CharField(max_length=12, choices=INCOME_OR_EXPENSE_CHOICES, blank=True)

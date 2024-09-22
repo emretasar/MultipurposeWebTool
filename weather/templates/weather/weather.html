@@ -16,10 +16,10 @@
                 <div class="col-4 d-flex align-items-stretch">
                     <div class="card text-center" style="width: 24rem;">
                         <div class="card-body">
-                            <img class="card-img-top" src="{% if weather.con == 'Clouds' %}{% static 'clouds.svg' %}{% elif weather.con == 'Rainy' %}{% static 'rainy.svg' %}{% elif weather.con == 'Clear' %}{% static 'sunny.svg' %}{% elif weather.con == 'Snow' %}{% static 'snow.svg' %}{% endif %}">
+                            <img class="card-img-top" src="{% if weather.con == 'Clouds' %}{% static 'clouds.svg' %}{% elif weather.con == 'Rain' %}{% static 'rainy.svg' %}{% elif weather.con == 'Clear' %}{% static 'sunny.svg' %}{% elif weather.con == 'Snow' %}{% static 'snow.svg' %}{% endif %}">
                             <h5 class="card-title">{{ weather.loc }}</h5>
                             <h6 class="card-subtitle">{{weather.con}}</h6>
-                            <p class="card-text">{{weather.info|linebreaks}}</p>-
+                            <p class="card-text">{{weather.info|linebreaks}}</p>
                             <a class="btn btn-sm btn-danger" href="{% url 'delete_weather' weather.loc.id %}">Delete</a>
                         </div>
                     </div>
