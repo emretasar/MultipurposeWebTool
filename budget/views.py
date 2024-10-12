@@ -25,9 +25,14 @@ def budget_entries(request):
             if _income_or_expense:
                 entries = entries.filter(inout =_income_or_expense)
             if _month:
+                currentYear = date.today().year
+                entries = entries.filter(date__year = currentYear)
                 entries = entries.filter(date__month = FilterFormModel.MONTH_CHOICES.index((_month, _month))+1)
             if _category:
                 entries = entries.filter(category =_category)
+            
+            global filtered_entries
+            filtered_entries = entries
 
         if form.is_valid():
             # Save form but do not commit to the database yet (owner needs to be set)
@@ -35,20 +40,23 @@ def budget_entries(request):
             new_entry.owner = user.username  # Assign owner before saving
             new_entry.save()
 
-            # return redirect('/budget')  # Redirect after successful submission
-
         else:
             print("Form not valid")
 
         # If either form fails, re-render the template with the forms and entries
-        context = {'entries': entries, 'form': form, 'filterForm': filterForm, 'user': user.username, 'today': today}
+        currentYear = date.today().year
+        currentMonth = date.today().month
+        entries_to_display = entries.filter(date__year = currentYear)
+        entries_to_display = entries.filter(date__month = currentMonth)
+        context = {'entries': entries_to_display, 'form': form, 'filterForm': filterForm, 'user': user.username, 'today': today}
         return render(request, 'budget/list.html', context)
 
     # Handle GET request
     else:
         form = BudgetEntryForm()
         filterForm = FilterForm()
-        context = {'entries': entries, 'form': form, 'filterForm': filterForm, 'user': user.username, 'today': today}
+        entries_to_display = entries.order_by("-id")[:10]
+        context = {'entries': entries_to_display, 'form': form, 'filterForm': filterForm, 'user': user.username, 'today': today}
         return render(request, 'budget/list.html', context)
 
 def export_to_excel(request):
@@ -59,12 +67,9 @@ def export_to_excel(request):
     columns = ['Income/Expense', 'Amount', 'Date', 'Category', 'Description']
     ws.append(columns)  # Append headers
 
-    currentMonth = date.today().month
-    entries = BudgetEntry.objects.all()
-    entries = entries.filter(date__month = currentMonth)
-
+    entries = filtered_entries
     for entry in entries:
-        if (entry.inout == "Outcome" or entry.inout == "Invest"):
+        if (entry.inout == "Outcome" or entry.inout == "Invest"): 
             entry.amount *= -1
         ws.append([entry.inout, entry.amount, entry.date, entry.category, entry.description])
 
