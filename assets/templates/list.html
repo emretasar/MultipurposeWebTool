@@ -1,0 +1,55 @@
+{% extends "main/home.html" %}
+
+{% block title %} Budget {% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div>
+        <table class="table">
+            <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Currency</th>
+                <th>Exchange Rate</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+            {% for entry in entries %}
+                {% if entry.owner == user %}
+                    <tr>
+                        <td>{{entry.date}}</td>
+                        <td>{{entry.amount}}</td>
+                        <td>{{entry.currency_type}}</td>
+                        <td>{{entry.exchange_rate}}</td>
+                        <td><a class="btn btn-sm btn-info" href="{% url 'update_asset_entry' entry.id %}">Update</a></td>
+                        <td><a class="btn btn-sm btn-danger" href="{% url 'delete_asset_entry' entry.id %}">Delete</a></td>
+                    </tr>
+                {% endif %} 
+            {% endfor %}
+        </table>
+
+        <button type="button" id="showFormButton" class="btn btn-success">Add New Entry</button>
+
+        <form method="POST" class="form-group" id="entryForm" style="display: none;">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-success">Create Entry</button>
+        </form>
+    </div>
+
+    <script>
+        const showFormButton = document.getElementById("showFormButton");
+        const entryForm = document.getElementById("entryForm");
+
+        showFormButton.addEventListener("click", function () {
+            if (entryForm.style.display === "none" || entryForm.style.display === "") {
+                entryForm.style.display = "block";
+                entryForm.scrollIntoView({ behavior: "smooth" });
+            } else {
+                entryForm.style.display = "none";
+            }
+        });
+    </script>
+
+{% endblock %}

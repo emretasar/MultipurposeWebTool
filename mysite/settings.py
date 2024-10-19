@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'notes.apps.NotesConfig',
     'weather.apps.WeatherConfig',
     'budget.apps.BudgetConfig',
+    'assets.apps.AssetsConfig',
 ]
 
 MIDDLEWARE = [

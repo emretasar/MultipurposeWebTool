@@ -11,4 +11,5 @@ urlpatterns = [
     path('weather/', include('weather.urls')),
     path('welcome/', views.welcome, name='welcome'),
     path('budget/', include('budget.urls')),
+    path('assets/', include('assets.urls')),
 ]
