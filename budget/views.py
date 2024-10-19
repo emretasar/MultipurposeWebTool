@@ -24,6 +24,7 @@ def budget_entries(request):
             
             if _income_or_expense:
                 entries = entries.filter(inout =_income_or_expense)
+            # try without here later
             if _month:
                 currentYear = date.today().year
                 entries = entries.filter(date__year = currentYear)

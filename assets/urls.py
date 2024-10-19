@@ -4,6 +4,7 @@ from .views import currency_asset_view
 
 
 urlpatterns = [
-    path('', views.index, name='assets_page'),
-    path('currency/', currency_asset_view, name='currency_asset_view'),
+    path('', views.currency_asset_view, name='assets_page'),
+	path('update_asset/<str:pk>/', views.update_entry, name="update_asset_entry"),
+	path('delete_asset/<str:pk>/', views.delete_entry, name="delete_asset_entry"),
 ]
