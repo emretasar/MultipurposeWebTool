@@ -33,7 +33,7 @@ def budget_entries(request):
                 entries = entries.filter(category =_category)
             
             global filtered_entries
-            filtered_entries = entries
+            filtered_entries = entries.order_by("date")
 
         if form.is_valid():
             # Save form but do not commit to the database yet (owner needs to be set)
@@ -41,14 +41,7 @@ def budget_entries(request):
             new_entry.owner = user.username  # Assign owner before saving
             new_entry.save()
 
-        else:
-            print("Form not valid")
-
-        # If either form fails, re-render the template with the forms and entries
-        currentYear = date.today().year
-        currentMonth = date.today().month
-        entries_to_display = entries.filter(date__year = currentYear)
-        entries_to_display = entries.filter(date__month = currentMonth)
+        entries_to_display = entries.order_by("-date")[:10]
         context = {'entries': entries_to_display, 'form': form, 'filterForm': filterForm, 'user': user.username, 'today': today}
         return render(request, 'budget/list.html', context)
 
@@ -56,7 +49,7 @@ def budget_entries(request):
     else:
         form = BudgetEntryForm()
         filterForm = FilterForm()
-        entries_to_display = entries.order_by("-id")[:10]
+        entries_to_display = entries.order_by("-date")[:10]
         context = {'entries': entries_to_display, 'form': form, 'filterForm': filterForm, 'user': user.username, 'today': today}
         return render(request, 'budget/list.html', context)
 
