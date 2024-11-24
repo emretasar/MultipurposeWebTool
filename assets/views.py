@@ -68,12 +68,12 @@ def currency_asset_view(request):
 def currency_line_chart(request, currency_type):
     matplotlib.use('Agg')  # Use Agg backend for rendering without GUI
 
-    entries = CurrencyAssetEntry.objects.filter(currency_type=currency_type.upper())
+    entries = CurrencyAssetEntry.objects.filter(currency_type=currency_type)
     dates = [entry.date for entry in entries]
     amounts = [entry.amount for entry in entries]
 
     plt.figure(figsize=(10, 5))
-    plt.plot(dates, amounts, marker='o', linestyle='-', color='b', label=f'{currency_type} Amount')
+    plt.plot(dates, amounts, marker='o', linestyle='-', color='b', label=f'{currency_type} Amount', linewidth=9)
     plt.title(f'{currency_type} Amount Over Time')
     plt.xlabel('Date')
     plt.ylabel('Amount')
