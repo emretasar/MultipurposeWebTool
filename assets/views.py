@@ -7,11 +7,16 @@ from .local_settings import TCMB_EVDS_API_KEY, EVDS_API_URL_EUR_A, EVDS_API_URL_
 import requests
 from datetime import datetime
 import dateutil.relativedelta
+import matplotlib
+import matplotlib.pyplot as plt
+import io
+import base64
+from django.shortcuts import render
+from .models import CurrencyAssetEntry
 
 
 def currency_asset_view(request):
     user = request.user
-    entries = CurrencyAssetEntry.objects.all()
 
     headers = {'key':TCMB_EVDS_API_KEY}
 
@@ -46,7 +51,7 @@ def currency_asset_view(request):
            print(form.errors)      
     else:
         form = CurrencyAssetForm()
-
+    
     latest_entries = (
         CurrencyAssetEntry.objects
         .values('currency_type')            # Group by currency_type
@@ -59,6 +64,31 @@ def currency_asset_view(request):
     )
 
     return render(request, 'list.html', {'entries': latest_assets, 'form': form, 'user': user.username})
+
+def currency_line_chart(request, currency_type):
+    matplotlib.use('Agg')  # Use Agg backend for rendering without GUI
+
+    entries = CurrencyAssetEntry.objects.filter(currency_type=currency_type)
+    dates = [entry.date for entry in entries]
+    amounts = [entry.amount for entry in entries]
+
+    plt.figure(figsize=(10, 5))
+    plt.plot(dates, amounts, marker='o', linestyle='-', color='b', label=f'{currency_type} Amount', linewidth=9)
+    plt.title(f'{currency_type} Amount Over Time')
+    plt.xlabel('Date')
+    plt.ylabel('Amount')
+    plt.legend()
+    plt.grid(True)
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+    buf.close()
+
+    context = {'chart': image_base64, 'currency_type': currency_type}
+    return render(request, 'currency_chart.html', context)
+
 
 def update_entry(request, pk):
     entry = CurrencyAssetEntry.objects.get(id=pk)
