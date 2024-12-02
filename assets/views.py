@@ -2,10 +2,6 @@ from django.shortcuts import render, redirect
 from .forms import CurrencyAssetForm
 from .models import CurrencyAssetEntry
 from django.db.models import Max
-from django.http import HttpResponse
-from .local_settings import TCMB_EVDS_API_KEY, EVDS_API_URL_EUR_A, EVDS_API_URL_USD_A, EVDS_API_URL_GLD
-import requests
-from datetime import datetime
 import dateutil.relativedelta
 import matplotlib
 import matplotlib.pyplot as plt
@@ -13,12 +9,11 @@ import io
 import base64
 from django.shortcuts import render
 from .models import CurrencyAssetEntry
+from .evds import get_latest_exchange_rate, ExchangeType
 
 
 def currency_asset_view(request):
     user = request.user
-
-    headers = {'key':TCMB_EVDS_API_KEY}
 
     if request.method == 'POST':
         form = CurrencyAssetForm(request.POST)
@@ -28,23 +23,11 @@ def currency_asset_view(request):
             end_date = new_entry.date
             start_date = end_date - dateutil.relativedelta.relativedelta(months=1)
             if (new_entry.currency_type == "USD"):
-                response = requests.get(EVDS_API_URL_USD_A.format(start = end_date.strftime('%d-%m-%Y'), end = end_date.strftime('%d-%m-%Y')), headers=headers)
-                if response.status_code == 200:
-                    json_data = response.json()
-                    last_element = json_data["items"][-1]
-                    new_entry.exchange_rate = last_element["TP_DK_USD_A"]
+                new_entry.exchange_rate = get_latest_exchange_rate(ExchangeType.USD, start_date, end_date)
             elif (new_entry.currency_type == "EUR"):
-                response = requests.get(EVDS_API_URL_EUR_A.format(start = end_date.strftime('%d-%m-%Y'), end = end_date.strftime('%d-%m-%Y')), headers=headers)
-                if response.status_code == 200:
-                    json_data = response.json()
-                    last_element = json_data["items"][-1]
-                    new_entry.exchange_rate = last_element["TP_DK_EUR_A"]
+                new_entry.exchange_rate = get_latest_exchange_rate(ExchangeType.EUR, start_date, end_date)
             elif (new_entry.currency_type == "GLD"):
-                response = requests.get(EVDS_API_URL_GLD.format(start = start_date.strftime('%d-%m-%Y'), end = end_date.strftime('%d-%m-%Y')), headers=headers)
-                if response.status_code == 200:
-                    json_data = response.json()
-                    last_element = json_data["items"][-1]
-                    new_entry.exchange_rate = last_element["TP_MK_KUL_YTL"]
+                new_entry.exchange_rate = get_latest_exchange_rate(ExchangeType.GLD, start_date, end_date)
             new_entry.owner = user.username 
             new_entry.save()
         else:
@@ -68,12 +51,12 @@ def currency_asset_view(request):
 def currency_line_chart(request, currency_type):
     matplotlib.use('Agg')  # Use Agg backend for rendering without GUI
 
-    entries = CurrencyAssetEntry.objects.filter(currency_type=currency_type)
+    entries = CurrencyAssetEntry.objects.filter(currency_type=currency_type).order_by('date')
     dates = [entry.date for entry in entries]
     amounts = [entry.amount for entry in entries]
 
     plt.figure(figsize=(10, 5))
-    plt.plot(dates, amounts, marker='o', linestyle='-', color='b', label=f'{currency_type} Amount', linewidth=9)
+    plt.plot(dates, amounts, marker='o', linestyle='-', color='b', label=f'{currency_type} Amount', linewidth=6)
     plt.title(f'{currency_type} Amount Over Time')
     plt.xlabel('Date')
     plt.ylabel('Amount')
