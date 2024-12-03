@@ -13,7 +13,7 @@
         <a href="{% url 'distribution_pie_chart' %}" id="pieChartButton" class="btn btn-success mr-3 rounded-sm">Pie Chart</a>
     </div>
 
-    <h2 style="text-align:center;">Line Chart for {{ currency_type }}</h2>
+    <h2 style="text-align:center;">Pie Chart for {{ date }}</h2>
     <img style="display: block; margin-left: auto; margin-right: auto;" src="data:image/png;base64,{{ chart }}" alt="Line Chart">
 
 {% endblock %}
