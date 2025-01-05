@@ -11,6 +11,11 @@ def budget_entries(request):
     user = request.user
     entries = BudgetEntry.objects.all()
 
+    current_year = date.today().year
+    current_month = date.today().month
+    current_year_entries = entries.filter(date__year = current_year)
+    current_month_entries = current_year_entries.filter(date__month = current_month)
+
     # Handle POST Request
     if request.method == "POST":
         filterForm = FilterForm(request.POST)
@@ -26,8 +31,7 @@ def budget_entries(request):
                 entries = entries.filter(inout =_income_or_expense)
             # try without here later
             if _month:
-                currentYear = date.today().year
-                entries = entries.filter(date__year = currentYear)
+                entries = entries.filter(date__year = current_year)
                 entries = entries.filter(date__month = FilterFormModel.MONTH_CHOICES.index((_month, _month))+1)
             if _category:
                 entries = entries.filter(category =_category)
@@ -42,16 +46,27 @@ def budget_entries(request):
             new_entry.save()
 
         entries_to_display = entries.order_by("-date")[:10]
-        context = {'entries': entries_to_display, 'form': form, 'filterForm': filterForm, 'user': user.username, 'today': today}
+        sum_of_income, sum_of_outcome, sum_of_invest = calculate_monthly_sums(current_month_entries)
+        context = {'entries': entries_to_display, 'form': form, 'filterForm': filterForm, 'user': user.username, 'today': today,
+                   'income_amount' : sum_of_income, 'outcome_amount' : sum_of_outcome, 'invest_amount' : sum_of_invest}
         return render(request, 'budget/list.html', context)
 
     # Handle GET request
     else:
         form = BudgetEntryForm()
         filterForm = FilterForm()
+
         entries_to_display = entries.order_by("-date")[:10]
-        context = {'entries': entries_to_display, 'form': form, 'filterForm': filterForm, 'user': user.username, 'today': today}
+        sum_of_income, sum_of_outcome, sum_of_invest = calculate_monthly_sums(current_month_entries)
+        context = {'entries': entries_to_display, 'form': form, 'filterForm': filterForm, 'user': user.username, 'today': today,
+                   'income_amount' : sum_of_income, 'outcome_amount' : sum_of_outcome, 'invest_amount' : sum_of_invest}
         return render(request, 'budget/list.html', context)
+
+def calculate_monthly_sums(entries):
+    sum_of_income = sum(entry.amount for entry in entries if entry.inout == "Income")
+    sum_of_outcome = sum(entry.amount for entry in entries if entry.inout == "Outcome")
+    sum_of_invest = sum(entry.amount for entry in entries if entry.inout == "Invest")
+    return sum_of_income, sum_of_outcome, sum_of_invest
 
 def export_to_excel(request):
     wb = openpyxl.Workbook()
