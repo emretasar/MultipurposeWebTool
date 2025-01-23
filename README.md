@@ -23,6 +23,28 @@ Users can keep an account of their savings with assets page. User can record the
 Weather page lets users create locations with their latitudes and longitudes and view the weather forecast for that location. Weather page uses OpenWeatherMap api to get the weather conditions.
 
 ## 3- Installation
+I recommend using anaconda environments when installing MultipurposeWebTool because of its ease of management and isolation of dependencies.
+
+### 3.1 - Clone the Repository
+```
+git clone https://github.com/emretasar/MultipurposeWebTool.git
+cd MultipurposeWebTool
+```
+### 3.2 - Create Conda Environment
+```
+conda create --name MultipurposeWebTool --file spec-file.txt
+conda activate MultipurposeWebTool
+```
+### 3.3 - Make Migrations
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+### 3.4 - Run
+```
+python manage.py runserver
+```
+
 ## 4- Usage
 ## 5- Feature Enhancements
 ## 6- License
