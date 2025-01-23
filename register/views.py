@@ -8,7 +8,7 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("/home")
+            return redirect("/login")
     else:
         form = RegisterForm()
         return render(request, "register/register.html", {"form":form})
@@ -25,7 +25,7 @@ def log_in(request):
                 return HttpResponseForbidden()
             else:
                 login(request, user)
-                return redirect("/home")
+                return render(request, "main/home.html", {"user":user})
     else:    
         form = LoginForm(request.POST)
         return render(request, "registration/login.html", {"form":form})

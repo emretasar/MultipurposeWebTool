@@ -42,9 +42,16 @@
       </nav>
   </div>
 
-  <div class="container">
+  <div class="container" style="margin-top: 1cm;">
     {% block content %}
-		{% endblock %}
+    <p style = "font-size: 24px;">Logged in as {{user}}</p>
+    <p style = "font-size: 18px;">Welcome to MultipurposeWebTool. MultipurposeWebTool is a versatile web application that enables you to take down notes, maintain a journal, manage your budget, track your savings, and observe the weather in a particular location. It has been created with Python Django and provides easy to use interface.</p>
+		<div style="text-align: center;">
+      <a href="https://github.com/emretasar/MultipurposeWebTool">You can visit the Github Repository of Multipupose Web Tool</a>
+      <br>
+      <img src="{% static 'images/swiss-army-knife-154314_1280.png' %}" alt="MultipurposeWebTool" width="540" height="427" class="center">
+    </div>
+    {% endblock %}
   </div>
     
 </body>
