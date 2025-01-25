@@ -37,8 +37,9 @@ def currency_asset_view(request):
     
     latest_entries = (
         CurrencyAssetEntry.objects
-        .values('currency_type')            # Group by currency_type
-        .annotate(latest_date=Max('date'))  # Get the max date for each currency_type
+        .filter(owner=user.username)     # Filter by owner first
+        .values('currency_type')           # Group by currency_type
+        .annotate(latest_date=Max('date')) # Get the max date for each currency_type
     )
 
     # Now get the complete object based on the latest date for each currency type
@@ -49,9 +50,11 @@ def currency_asset_view(request):
     return render(request, 'list.html', {'entries': latest_assets, 'form': form, 'user': user.username})
 
 def currency_line_chart(request, currency_type):
+    user = request.user
+
     matplotlib.use('Agg')  # Use Agg backend for rendering without GUI
 
-    entries = CurrencyAssetEntry.objects.filter(currency_type=currency_type).order_by('date')
+    entries = CurrencyAssetEntry.objects.filter(owner=user.username, currency_type=currency_type).order_by('date')
     dates = [entry.date for entry in entries]
     amounts = [entry.amount for entry in entries]
 
@@ -73,10 +76,13 @@ def currency_line_chart(request, currency_type):
     return render(request, 'currency_chart.html', context)
 
 def distribution_pie_chart(request):
+    user = request.user
+    
     matplotlib.use('Agg')  # Use Agg backend for rendering without GUI
 
     latest_entries = (
         CurrencyAssetEntry.objects
+        .filter(owner=user.username)
         .values('currency_type')           
         .annotate(latest_date=Max('date'))  
     )
