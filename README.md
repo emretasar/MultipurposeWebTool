@@ -45,7 +45,17 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+Also keep in mind that the MultipurposeWebTool uses following APIs to gather necessary data.
+- [EVDS API](https://evds2.tcmb.gov.tr/index.php?)
+- [OPENWEATHER API](https://openweathermap.org/)
+
+To be able to run MultipurposeWebTool, you should create local_settings.py files inside assets and wheather projects and store your API credentials inside them.
+
 ## 4- Usage
+
+You can watch the sneak peek video that shows how to use the MultipurposeWebTool in the below link. 
+[![MultipurposeWebTool](https://img.youtube.com/vi/M3XKuE3eeSg/0.jpg)](https://www.youtube.com/watch?v=M3XKuE3eeSg)
+
 ## 5- Feature Enhancements
 ## 6- License
 
